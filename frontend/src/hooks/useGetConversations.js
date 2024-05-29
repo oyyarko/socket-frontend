@@ -14,7 +14,7 @@ const useGetConversations = () => {
         const res = await fetch("http://192.168.29.63:8080/listUsers", {
           headers: {
             "Content-Type": "application/json",
-            token: localStorage.getItem("chat-user-tone"),
+            token: localStorage.getItem("user-token"),
           },
         });
         const data = await res.json();

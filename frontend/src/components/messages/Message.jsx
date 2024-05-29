@@ -4,26 +4,34 @@ import useConversation from "../../zustand/useConversation";
 import { Base64Image } from "../sidebar/Conversation";
 
 const Message = ({ message }) => {
-	const { authUser } = useAuthContext();
-	const { selectedConversation } = useConversation();
-	const fromMe = message.senderId === authUser.data.user_id;
-	const formattedTime = extractTime(message.createdAt);
-	const chatClassName = fromMe ? "chat-end" : "chat-start";
-	const profilePic = fromMe ? authUser.data.profilePicture : selectedConversation?.profilePicture;
-	const bubbleBgColor = fromMe ? "bg-blue-500" : "";
+  const { authUser } = useAuthContext();
+  const { selectedConversation } = useConversation();
+  const fromMe = message.senderId === authUser.data.user_id;
+  const formattedTime = extractTime(message.time);
+  const chatClassName = fromMe ? "chat-end" : "chat-start";
+  const profilePic = fromMe
+    ? authUser.data.profilePicture
+    : selectedConversation?.profilePicture;
+  const bubbleBgColor = fromMe ? "bg-blue-500" : "";
 
-	const shakeClass = message.shouldShake ? "shake" : "";
+  const shakeClass = message.shouldShake ? "shake" : "";
 
-	return (
-		<div className={`chat ${chatClassName}`}>
-			<div className='chat-image avatar'>
-				<div className='w-10 rounded-full'>
-					<Base64Image base64String={profilePic} />
-				</div>
-			</div>
-			<div className={`chat-bubble text-white ${bubbleBgColor} ${shakeClass} pb-2`}>{message.message}</div>
-			<div className='chat-footer opacity-50 text-xs flex gap-1 items-center'>{formattedTime}</div>
-		</div>
-	);
+  return (
+    <div className={`chat ${chatClassName}`}>
+      <div className="chat-image avatar">
+        <div className="w-10 rounded-full">
+          <Base64Image base64String={profilePic} />
+        </div>
+      </div>
+      <div
+        className={`chat-bubble text-white ${bubbleBgColor} ${shakeClass} pb-2`}
+      >
+        {message.message}
+      </div>
+      <div className="chat-footer opacity-50 text-xs flex gap-1 items-center">
+        {formattedTime}
+      </div>
+    </div>
+  );
 };
 export default Message;

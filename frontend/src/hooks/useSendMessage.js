@@ -16,6 +16,7 @@ const useSendMessage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          token: localStorage.getItem("user-token"),
         },
         body: JSON.stringify({
           message,
