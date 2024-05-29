@@ -3,45 +3,52 @@ import toast from "react-hot-toast";
 import { useAuthContext } from "../context/AuthContext";
 
 const useLogin = () => {
-	const [loading, setLoading] = useState(false);
-	const { setAuthUser } = useAuthContext();
+  const [loading, setLoading] = useState(false);
+  const { setAuthUser } = useAuthContext();
 
-	const login = async (username, password) => {
-		const success = handleInputErrors(username, password);
-		if (!success) return;
-		setLoading(true);
-		try {
-			const res = await fetch("http://192.168.29.63:8080/login", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ username, password }),
-			});
+  const login = async (username, password) => {
+    const success = handleInputErrors(username, password);
+    if (!success) return;
+    setLoading(true);
+    try {
+      const res = await fetch("http://192.168.29.63:8080/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          password,
+          registrationToken: localStorage.getItem(
+            "firebase-registration-token"
+          ),
+        }),
+      });
 
-			const data = await res.json();
+      const data = await res.json();
 
-			if (data.error) {
-				throw new Error(data.error);
-			}
+      if (data.error) {
+        throw new Error(data.error);
+      }
 
-			localStorage.setItem("chat-user", JSON.stringify(data));
-			localStorage.setItem("user-token", data.token);
-			setAuthUser(data);
-		} catch (error) {
-			toast.error(error.message);
-		} finally {
-			setLoading(false);
-		}
-	};
+      localStorage.setItem("chat-user", JSON.stringify(data));
+      localStorage.setItem("user-token", data.token);
 
-	return { loading, login };
+      setAuthUser(data);
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, login };
 };
 export default useLogin;
 
 function handleInputErrors(username, password) {
-	if (!username || !password) {
-		toast.error("Please fill in all fields");
-		return false;
-	}
+  if (!username || !password) {
+    toast.error("Please fill in all fields");
+    return false;
+  }
 
-	return true;
+  return true;
 }
